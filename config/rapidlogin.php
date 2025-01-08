@@ -7,7 +7,7 @@ return [
 
     'home_route_name' => env('RAPIDLOGIN_HOME_ROUTE_NAME', 'home'),
 
-    // This allows for easy user setup via the .env file (e.g., RAPIDLOGIN_USERS=1:John Doe,1337:Jane Doe).
+    // This allows for easy user setup via the .env file (e.g., RAPIDLOGIN_USERS="1:John Doe,1337:Jane Doe").
     // When empty, the first 3 users from the database will be used.
     'users' => str(env('RAPIDLOGIN_USERS'))
         ->explode(',')
