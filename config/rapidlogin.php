@@ -34,4 +34,14 @@ return [
     'route_name_pattern' => env('RAPIDLOGIN_ROUTE_NAME_PATTERN', '*'),
     // Negative pattern for route names, if a route matches this pattern, it will not be injected.
     'route_name_negative_pattern' => env('RAPIDLOGIN_ROUTE_NAME_NEGATIVE_PATTERN', ''),
+
+    // This enables easy setup of additional links via the .env file (e.g., RAPIDLOGIN_LINKS="Link1:https://app.test,Link2:https://app2.test").
+    'links' => str(env('RAPIDLOGIN_LINKS'))
+        ->explode(',')
+        ->filter()
+        ->mapWithKeys(function ($item) {
+            [$text, $url] = str($item)->explode(':', 2);
+            return [$text => $url];
+        })
+        ->toArray(),
 ];

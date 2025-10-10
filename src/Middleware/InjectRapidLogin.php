@@ -20,7 +20,7 @@ class InjectRapidLogin
         if (!$response instanceof Response) {
             return $response;
         }
-        
+
         //skip when disabled or running tests
         if (!config('rapidlogin.enabled', false) || app()->runningUnitTests()) {
             return $response;
@@ -56,6 +56,7 @@ class InjectRapidLogin
             $html = view('rapidlogin::links', [
                 'users' => $users,
                 'showCloseButton' => config('rapidlogin.show_close_button', true),
+                'links' => config('rapidlogin.links', []),
             ])->render();
 
 

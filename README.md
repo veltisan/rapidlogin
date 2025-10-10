@@ -26,6 +26,9 @@ RAPIDLOGIN_ENABLED=true
 #to define the routes on which the buttons are displayed
 #examples: 'login', 'login*', ... defaults to '*' to match all routes. Separate multiple route names with a comma.
 #RAPIDLOGIN_ROUTE_NAME_PATTERN='*'
+
+#to add additional links to the rapidlogin panel, use the format `text:url,text:url,...`
+#RAPIDLOGIN_LINKS="Docs:https://docs.example.com,Horizon:https://horizon.example.com"
 ```
 
 ### Users
@@ -41,6 +44,9 @@ You can set the users in `.env` file, but if you want to set the users in a more
     5 => 'customer',
 ],
 ```
+
+### Additional links
+You can add optional additional links to the rapidlogin panel by adding them to the `.env` file. This is a quick way to add handy shortcuts to frequently used development tools and resources directly in the panel.
 
 ## Publishing config and view
 ```

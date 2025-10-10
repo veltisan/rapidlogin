@@ -17,4 +17,13 @@
             X
         </a>
     @endif
+    @foreach($links as $text => $url)
+        <a
+            href="{{ $url }}"
+            target="_blank"
+            style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; color: #fff; background-color: #5aafba; text-align: center; vertical-align: middle; user-select: none; font-weight: 400; text-decoration: none;"
+        >
+            {{ $text }}
+        </a>
+    @endforeach
 </div>
