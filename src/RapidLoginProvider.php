@@ -30,19 +30,20 @@ class RapidLoginProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/rapidlogin.php', 'rapidlogin');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'rapidlogin');
 
+        if ((bool) config('rapidlogin.enabled', false)) {
+            $routeKeyName = config('rapidlogin.user_route_key_name', 'id');
 
-        $routeKeyName = config('rapidlogin.user_route_key_name', 'id');
+            Route::get("_rapidlogin/login/{user:{$routeKeyName}}", function (User $user) {
+                Auth::login($user);
+                request()->session()->regenerate();
 
-        Route::get("_rapidlogin/login/{user:{$routeKeyName}}", function (User $user) {
-            Auth::login($user);
-            request()->session()->regenerate();
+                return redirect()->route(config('rapidlogin.home_route_name', 'home'));
+            })->middleware('web')
+                ->name('rapidlogin.login');
 
-            return redirect()->route(config('rapidlogin.home_route_name', 'home'));
-        })->middleware('web')
-            ->name('rapidlogin.login');
+            $kernel = $this->app[Kernel::class];
 
-        $kernel = $this->app[Kernel::class];
-
-        $kernel->pushMiddleware(InjectRapidLogin::class);
+            $kernel->pushMiddleware(InjectRapidLogin::class);
+        }
     }
 }
