@@ -48,6 +48,31 @@ You can set the users in `.env` file, but if you want to set the users in a more
 ### Additional links
 You can add optional additional links to the rapidlogin panel by adding them to the `.env` file. This is a quick way to add handy shortcuts to frequently used development tools and resources directly in the panel.
 
+### Multiple guards
+By default rapidlogin authenticates against your app's default guard. If your app uses several guards, you can have the panel log into a different guard depending on which route it is shown on.
+
+Map route-name patterns to a guard via `.env` (the first matching pattern wins; unmatched routes use the default guard):
+```
+#log into the 'web' guard on admin.* routes, the 'client' guard everywhere else (the default)
+RAPIDLOGIN_GUARD_ROUTES="admin.*:web"
+
+#optionally override which guard is used when no pattern matches (defaults to config('auth.defaults.guard'))
+#RAPIDLOGIN_DEFAULT_GUARD=client
+```
+
+Different guards usually authenticate different models, so for any guard other than the default you define its model and users in the published config (`config/rapidlogin.php`). The default guard keeps using the top-level `users`/`user_model`/`user_route_key_name`.
+```
+'guards' => [
+    'web' => [
+        'model'          => App\Models\Admin::class,
+        'route_key_name' => 'id',
+        'users'          => [1 => 'super admin'],
+        'home_route'     => 'admin.dashboard', // optional, defaults to home_route_name
+    ],
+],
+```
+Any per-guard key you omit falls back automatically: `model` is derived from `config/auth.php` for that guard, `users` is auto-fetched (first 3 from the model), `route_key_name` defaults to `id`, and `home_route` falls back to `home_route_name`.
+
 ## Publishing config and view
 ```
 php artisan vendor:publish --tag=rapidlogin-config

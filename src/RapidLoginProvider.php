@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Veltisan\RapidLogin\Middleware\InjectRapidLogin;
 
 class RapidLoginProvider extends ServiceProvider
@@ -32,16 +33,24 @@ class RapidLoginProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'rapidlogin');
 
         if ((bool) Config::get('rapidlogin.enabled', false)) {
-            $model = Config::get('rapidlogin.user_model');
-            $routeKeyName = Config::get('rapidlogin.user_route_key_name', 'id');
+            Route::get('_rapidlogin/login/{user}/{guard?}', function (string $user, ?string $guard = null) {
+                $guard ??= RapidLogin::defaultGuard();
 
-            Route::get('_rapidlogin/login/{user}', function (string $user) use ($model, $routeKeyName) {
-                $user = $model::query()->where($routeKeyName, $user)->firstOrFail();
+                if (!in_array($guard, RapidLogin::knownGuards(), true)) {
+                    throw new NotFoundHttpException();
+                }
 
-                Auth::login($user);
+                $config = RapidLogin::guardConfig($guard);
+                $model = $config['model'];
+
+                $authUser = $model::query()
+                    ->where($config['route_key_name'], $user)
+                    ->firstOrFail();
+
+                Auth::guard($guard)->login($authUser);
                 Session::regenerate();
 
-                return Redirect::route(Config::get('rapidlogin.home_route_name', 'home'));
+                return Redirect::route($config['home_route']);
             })->middleware('web')
                 ->name('rapidlogin.login');
 
