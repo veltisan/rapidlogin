@@ -3,8 +3,8 @@
 namespace Veltisan\RapidLogin\Middleware;
 
 use Closure;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
@@ -17,23 +17,23 @@ class InjectRapidLogin
     {
         $response = $next($request);
 
-        //skip when response is not classic response (for example: StreamedResponse, BinaryFileResponse is skipped)
-        if (!$response instanceof Response) {
+        // skip when response is not classic response (for example: StreamedResponse, BinaryFileResponse is skipped)
+        if (! $response instanceof Response) {
             return $response;
         }
 
-        //skip when disabled or running tests
-        if (!Config::get('rapidlogin.enabled', false) || App::runningUnitTests()) {
+        // skip when disabled or running tests
+        if (! Config::get('rapidlogin.enabled', false) || App::runningUnitTests()) {
             return $response;
         }
 
-        //skip routes that don't match the configured route name patterns
-        if (!$request->routeIs(...str(Config::get('rapidlogin.route_name_pattern'))->explode(',')->all())
+        // skip routes that don't match the configured route name patterns
+        if (! $request->routeIs(...str(Config::get('rapidlogin.route_name_pattern'))->explode(',')->all())
             || $request->routeIs(...str(Config::get('rapidlogin.route_name_negative_pattern'))->explode(',')->all())) {
             return $response;
         }
 
-        //resolve the guard that applies to this route, and its users
+        // resolve the guard that applies to this route, and its users
         $guard = RapidLogin::resolveGuard($request);
         $users = $this->resolveUsers(RapidLogin::guardConfig($guard));
 
@@ -44,7 +44,7 @@ class InjectRapidLogin
             'links' => Config::get('rapidlogin.links', []),
         ])->render();
 
-        $content = Str::replaceLast('</body>', $html . '</body>', $response->getContent());
+        $content = Str::replaceLast('</body>', $html.'</body>', $response->getContent());
         $response->setContent($content);
 
         return $response;
@@ -56,7 +56,7 @@ class InjectRapidLogin
      */
     protected function resolveUsers(array $guardConfig): iterable
     {
-        if (!empty($guardConfig['users'])) {
+        if (! empty($guardConfig['users'])) {
             return $guardConfig['users'];
         }
 
@@ -73,7 +73,7 @@ class InjectRapidLogin
             $attributes = ['name', 'username', 'email'];
 
             foreach ($attributes as $attribute) {
-                if (!is_null($user->$attribute)) {
+                if (! is_null($user->$attribute)) {
                     $value = $user->$attribute;
                     break;
                 }

@@ -22,22 +22,22 @@ class RapidLoginProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/rapidlogin.php' => $this->app->configPath('rapidlogin.php'),
+            __DIR__.'/../config/rapidlogin.php' => $this->app->configPath('rapidlogin.php'),
         ], 'rapidlogin-config');
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => $this->app->resourcePath('views/vendor/rapidlogin'),
+            __DIR__.'/../resources/views' => $this->app->resourcePath('views/vendor/rapidlogin'),
         ], 'rapidlogin-views');
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/rapidlogin.php', 'rapidlogin');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'rapidlogin');
+        $this->mergeConfigFrom(__DIR__.'/../config/rapidlogin.php', 'rapidlogin');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'rapidlogin');
 
         if ((bool) Config::get('rapidlogin.enabled', false)) {
             Route::get('_rapidlogin/login/{user}/{guard?}', function (string $user, ?string $guard = null) {
                 $guard ??= RapidLogin::defaultGuard();
 
-                if (!in_array($guard, RapidLogin::knownGuards(), true)) {
-                    throw new NotFoundHttpException();
+                if (! in_array($guard, RapidLogin::knownGuards(), true)) {
+                    throw new NotFoundHttpException;
                 }
 
                 $config = RapidLogin::guardConfig($guard);
