@@ -2,13 +2,14 @@
 
 namespace Veltisan\RapidLogin\Middleware;
 
-use App\Models\User;
 use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InjectRapidLogin
 {
@@ -16,23 +17,22 @@ class InjectRapidLogin
     {
         $response = $next($request);
 
-        //skip when response is not classic reponse (for example: StreamedResponse, BinaryFileResponse is skipped)
+        //skip when response is not classic response (for example: StreamedResponse, BinaryFileResponse is skipped)
         if (!$response instanceof Response) {
             return $response;
         }
 
         //skip when disabled or running tests
-        if (!config('rapidlogin.enabled', false) || app()->runningUnitTests()) {
+        if (!Config::get('rapidlogin.enabled', false) || App::runningUnitTests()) {
             return $response;
         }
 
-        $users = config('rapidlogin.users');
-        $userKey = config('rapidlogin.user_route_key_name');
+        $users = Config::get('rapidlogin.users');
+        $userKey = Config::get('rapidlogin.user_route_key_name');
 
         //if no users are defined, get first 3 users from database
         if (empty($users)) {
-            $model = config('rapidlogin.user_model');
-            $modelInstance = new $model;
+            $model = Config::get('rapidlogin.user_model');
 
             $attributes = ['name', 'username', 'email'];
 
@@ -49,14 +49,14 @@ class InjectRapidLogin
             });
         }
 
-        if ($request->routeIs(str(config('rapidlogin.route_name_pattern'))->explode(','))
-            && !$request->routeIs(str(config('rapidlogin.route_name_negative_pattern'))->explode(','))) {
+        if ($request->routeIs(str(Config::get('rapidlogin.route_name_pattern'))->explode(','))
+            && !$request->routeIs(str(Config::get('rapidlogin.route_name_negative_pattern'))->explode(','))) {
             $content = $response->getContent();
 
-            $html = view('rapidlogin::links', [
+            $html = View::make('rapidlogin::links', [
                 'users' => $users,
-                'showCloseButton' => config('rapidlogin.show_close_button', true),
-                'links' => config('rapidlogin.links', []),
+                'showCloseButton' => Config::get('rapidlogin.show_close_button', true),
+                'links' => Config::get('rapidlogin.links', []),
             ])->render();
 
 

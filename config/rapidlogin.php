@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     'enabled' => env('RAPIDLOGIN_ENABLED', false),
 
     'show_close_button' => env('RAPIDLOGIN_SHOW_CLOSE_BUTTON', true),
@@ -44,4 +45,5 @@ return [
             return [$text => $url];
         })
         ->toArray(),
+
 ];

@@ -2,7 +2,6 @@
     "name": "veltisan/rapidlogin",
     "description": "A short description of what your package does",
     "license": "MIT",
-
     "autoload": {
         "psr-4": {
             "Veltisan\\RapidLogin\\": "src/"
@@ -14,7 +13,12 @@
         }
     ],
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/http": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/routing": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/database": "^11.0 || ^12.0 || ^13.0"
     },
     "extra": {
         "laravel": {
