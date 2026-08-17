@@ -51,7 +51,7 @@ class RapidLogin
      * Resolve the rapidlogin settings for a specific guard, applying the
      * fallback chain documented in config/rapidlogin.php.
      *
-     * @return array{model: ?string, users: array, route_key_name: string, home_route: string}
+     * @return array{model: class-string|null, users: array, route_key_name: string, home_route: string}
      */
     public static function guardConfig(string $guard): array
     {
@@ -77,6 +77,8 @@ class RapidLogin
     /**
      * Derive a guard's model from the app's auth config
      * (auth.guards.{guard}.provider -> auth.providers.{provider}.model).
+     *
+     * @return class-string|null
      */
     protected static function modelForGuard(string $guard): ?string
     {
