@@ -2,7 +2,6 @@
     "name": "veltisan/rapidlogin",
     "description": "A short description of what your package does",
     "license": "MIT",
-
     "autoload": {
         "psr-4": {
             "Veltisan\\RapidLogin\\": "src/"
@@ -14,7 +13,27 @@
         }
     ],
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/http": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/routing": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/database": "^11.0 || ^12.0 || ^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.25",
+        "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "ekino/phpstan-banned-code": "^3.2"
+    },
+    "scripts": {
+        "larastan": [
+            "vendor/bin/phpstan analyse"
+        ],
+        "pint": [
+            "vendor/bin/pint"
+        ]
     },
     "extra": {
         "laravel": {
